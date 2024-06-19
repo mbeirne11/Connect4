@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Connect 4</title>
+        <meta charset="utf-8">
+        <meta name="author" content="Matt Beirne">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- D3 -->    
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script type="text/javascript" src="https://cdn.rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" />
+        </script>
+        <!-- static -->
+        <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+        <script src="..\static\js\connect4.js"></script>
+    </head>
+    <body>
+        <h1>Connect 4</h1>
+        <button type="button" id="newGame">
+            New Game<br>Player first
+        </button>
+        <button type="button" id="newGame2">
+            New Game<br>CPU first
+        </button>
+        <div id="board"></div>
+        <h1 id="winner"></h1>
+        <hr>
+        <h1>Score</h1>
+        
+        <h2 style="display:inline-block;">CPU: </h2>
+        <h2 id = "cpuScore" style="display:inline-block;">0</h2>
+        <h2 style="display:inline-block;"> | </h2>
+        <h2 style="display:inline-block;">Player: </h2>
+        <h2 id = "playerScore" style="display:inline-block;">0</h2>
+
+    </body>
+</html>
