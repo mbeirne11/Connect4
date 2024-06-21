@@ -1,18 +1,24 @@
 window.onload = function() {
     setBoard();
 }
+// 6x7 board
 let board = [[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]
-
+// let cpuRating = 1
 function setBoard() {
+    // assign button to a variable using D3 and button's id 
+    cpuRating = d3.select("#cpuRating").property('value')
+    console.log(cpuRating)
     let b = d3.select('#newGame')
     let c = d3.select('#newGame2')
     b.on("click", () => {
         setBoard()
+        // Player first
         newGame(board)
     })
     c.on("click", () => {
         setBoard()
-        newGame2(board)
+        // CUP first
+        newGame2(board,cpuRating)
     })
     // reset header
     document.getElementById('winner').textContent = ""
@@ -40,9 +46,10 @@ function setBoard() {
             }
         }
     }
+    // player first
     newGame(board)
 }
-
+// mouseout event
 function unHighlightMove(tile){
     c=parseInt(tile.id.split(', ')[1])
     const moves = check_legal_moves(board)
@@ -53,6 +60,7 @@ function unHighlightMove(tile){
         }
     })
 }
+// mousemove event
 function highlightMove(tile){
     c=parseInt(tile.id.split(', ')[1])
     const moves = check_legal_moves(board)
@@ -63,7 +71,7 @@ function highlightMove(tile){
         }
     })
 }
-
+// Player first
 function newGame(board) {
     for(let i=0;i<6;i++){
         for(let j=0;j<7;j++){
@@ -71,6 +79,7 @@ function newGame(board) {
         }
     }
     console.log('new game')}
+// CPU first
 function newGame2(board) {
     for(let i=0;i<6;i++){
         for(let j=0;j<7;j++){
@@ -78,16 +87,15 @@ function newGame2(board) {
         }
     }
     console.log('new game')
-    cpuMove(board)
+    cpuMove(board,cpuRating)
 }
-
 function check_legal_moves(board){
     if(check_for_winner(board) != 0){
         return([])
     }else{
         let legal_moves = []
         for(let col = 0;col<7;col++){
-
+            // check for first 0 in each column
             row1 = (board[5][col] == 0)
             row2 = (board[4][col] == 0)
             row3 = (board[3][col] == 0)
@@ -146,20 +154,25 @@ function check_for_winner(board){
     }
     return(winner)
 }
+// bms-best move score: number of possible connect 4s for each tile
 function find_score(board,turn){
     bms = [[3, 4, 5, 7, 5, 4, 3],
-               [4, 6, 8,10, 8, 6, 4],
-               [5, 7,11,13,11, 7, 5],
-               [5, 7,11,13,11, 7, 5],
-               [4, 6, 8,10, 8, 6, 4],
-               [3, 4, 5, 7, 5, 4, 3]]
+           [4, 6, 8,10, 8, 6, 4],
+           [5, 7,11,13,11, 7, 5],
+           [5, 7,11,13,11, 7, 5],
+           [4, 6, 8,10, 8, 6, 4],
+           [3, 4, 5, 7, 5, 4, 3]]
     score = 0
+    // player move = -1
+    // cpu move = 1
+    // open = 0
     for(i = 0;i<6;i++){
         for(j = 0;j<7;j++){
             score+=bms[i][j]*board[i][j]
         }
     }
     moves = check_legal_moves(board)
+    // next move
     moves.forEach(move => {
         a = move[0]
         b = move[1]
@@ -168,10 +181,6 @@ function find_score(board,turn){
     return(score)
 }
 function minmax(board,depth,turn,alpha,beta){
-    // #if game ends in a draw, score = 0
-    if (check_legal_moves(board) == []){
-        return(0)
-    }
     // #if someone wins, score = + or - 1000
     if (check_for_winner(board) != 0){
         return(Infinity*(-turn))
@@ -210,7 +219,7 @@ function minmax(board,depth,turn,alpha,beta){
         return(bscore)
     }
 }
-
+// Check all legal moves and find the best score
 function best_move(board,depth){
     console.log('bestMove')
     scores = []
@@ -238,10 +247,12 @@ function best_move(board,depth){
     return(bmove)
 }
 function playerMove(move){
+    // if there is a winner on the previous move, reset the board
     let winner = document.getElementById('winner').textContent
     if(winner != ''){
         setBoard()
-    }else{
+    }else{ 
+        // get column for player move and check legal moves to get the row
         console.log('PlayerMove')
         c=parseInt(move.id.split(', ')[1])
         const moves = check_legal_moves(board)
@@ -255,6 +266,7 @@ function playerMove(move){
                 if(move[1]==c){
                     let r = move[0]
                     board[r][c]=-1
+                    // change class to color the tile with id "r, c"
                     document.getElementById(`${r}, ${c}`).classList.remove('playerHover')
                     document.getElementById(`${r}, ${c}`).classList.add('player')
                     if (check_for_winner(board) == -1){
@@ -265,23 +277,28 @@ function playerMove(move){
         }else{
             return
         }
-        cpuMove(board)
-    }
-    
+        cpuMove(board,cpuRating)
+    } 
 }
-
-function cpuMove(board){
+function cpuMove(board,cpuRating){
+    console.log(cpuRating)
     console.log('cpuMove')
     let winner = check_for_winner(board)
     if (winner == -1){
-        score = parseInt(document.getElementById('playerScore').innerHTML)
+        score = parseFloat(document.getElementById('playerScore').innerHTML)
         document.getElementById('playerScore').innerHTML = score + 1
         document.getElementById('winner').textContent = "Player Wins"
         return
     }else if(winner == 0){
-        let move = best_move(board,5)
+        // can change depth here   !
+        let move = best_move(board,cpuRating)
         if(!move){
+            console.log('draw')
             document.getElementById('winner').textContent = "Draw"
+            cpuScore = parseFloat(document.getElementById('cpuScore').innerHTML)
+            document.getElementById('cpuScore').innerHTML = cpuScore + 0.5
+            playerScore = parseFloat(document.getElementById('playerScore').innerHTML)
+            document.getElementById('playerScore').innerHTML = playerScore + 0.5
             return
         }else{
             let r = move[0]
@@ -290,17 +307,21 @@ function cpuMove(board){
             document.getElementById(`${r}, ${c}`).classList.add('cpu')
             let winner = check_for_winner(board)
             if(winner == 1){
-                score = parseInt(document.getElementById('cpuScore').innerHTML)
+                score = parseFloat(document.getElementById('cpuScore').innerHTML)
                 document.getElementById('cpuScore').innerHTML = score + 1
                 console.log('Winner!!')
                 console.log(winner)
                 document.getElementById('winner').textContent = "CPU Wins"
             }else if(check_legal_moves(board).length == 0){
+                console.log('draw')
                 document.getElementById('winner').textContent = "Draw"
+                cpuScore = parseFloat(document.getElementById('cpuScore').innerHTML)
+                document.getElementById('cpuScore').innerHTML = cpuScore + 0.5
+                playerScore = parseFloat(document.getElementById('playerScore').innerHTML)
+                document.getElementById('playerScore').innerHTML = playerScore + 0.5
                 return
             }
         }
-        
     }else{
         console.log('Winner!!')
         console.log(winner)
