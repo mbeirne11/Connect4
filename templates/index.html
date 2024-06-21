@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Connect 4</title>
+        <title>CONNECT 4</title>
         <meta charset="utf-8">
         <meta name="author" content="Matt Beirne">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,13 +14,20 @@
         <script src="..\static\js\connect4.js"></script>
     </head>
     <body>
-        <h1>Connect 4</h1>
+        <h1>CONNECT 4</h1>
+        <select id="cpuRating">
+            <option value = "1">Easy</option>
+            <option value = "2">Medium</option>
+            <option value = "5">Hard</option>
+            <option value = "7">Very Hard</option>
+        </select>
         <button type="button" id="newGame">
             New Game<br>Player first
         </button>
         <button type="button" id="newGame2">
             New Game<br>CPU first
         </button>
+        
         <div id="board"></div>
         <h1 id="winner"></h1>
         <hr>
