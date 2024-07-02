@@ -1,6 +1,6 @@
 body{
     text-align: center;
-    background-color: rgb(56, 119, 148);
+    background-color: rgb(0, 177, 253);
     color:aliceblue;
 }
 h1{
@@ -15,7 +15,7 @@ h2{
     width: 700px;
 
     background-color:rgb(0, 2, 80);
-    border: 10px solid rgb(204, 207, 0);
+    border: 10px solid rgb(2, 0, 141);
 
     margin: 0 auto;
     display: flex;
@@ -28,16 +28,18 @@ h2{
 
     background-color: aliceblue;
     border-radius: 50%;
-    border: 5px solid black;
+    border: 5px solid rgb(2, 0, 141);
 }
 .player{
     background-color: red;
+    background-image: radial-gradient(rgb(255, 132, 132), rgb(255, 68, 68), red);
 }
 .playerHover{
     background-color: rgb(255, 123, 123);
 }
 .cpu{
     background-color: yellow;
+    background-image: radial-gradient(rgb(255, 255, 132), rgb(255, 255, 68), yellow);
 }
 button{
     color:aliceblue;
@@ -46,4 +48,10 @@ button{
 select{
     color:aliceblue;
     background-color: maroon;
+}
+.playerWinner{
+    border: 5px solid rgb(160, 0, 0);
+}
+.cpuWinner{
+    border: 5px solid rgb(177, 177, 0);
 }

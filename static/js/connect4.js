@@ -154,6 +154,85 @@ function check_for_winner(board){
     }
     return(winner)
 }
+function color_winner(board){
+    let winner = 0
+    // h
+    for(let r = 0;r<6;r++){
+        for(let c = 0;c<4;c++){
+            if ((board[r][c] != 0) &(board[r][c] == board[r][c+1]) & (board[r][c] == board[r][c+2]) &(board[r][c] == board[r][c+3])){
+                winner = board[r][c]
+                if(winner==1){
+                    document.getElementById(`${r}, ${c}`).classList.add('cpuWinner')
+                    document.getElementById(`${r}, ${c+1}`).classList.add('cpuWinner')
+                    document.getElementById(`${r}, ${c+2}`).classList.add('cpuWinner')
+                    document.getElementById(`${r}, ${c+3}`).classList.add('cpuWinner')
+                }else if(winner == -1){
+                    document.getElementById(`${r}, ${c}`).classList.add('playerWinner')
+                    document.getElementById(`${r}, ${c+1}`).classList.add('playerWinner')
+                    document.getElementById(`${r}, ${c+2}`).classList.add('playerWinner')
+                    document.getElementById(`${r}, ${c+3}`).classList.add('playerWinner')
+                }
+            }
+        }
+    }
+    // v
+    for (let c=0;c<7;c++){
+        for(let r=0;r<3;r++){
+            if ((board[r][c] != 0) &(board[r][c] == board[r+1][c]) & (board[r][c] == board[r+2][c]) &(board[r][c] == board[r+3][c])){
+                winner = board[r][c]
+                if(winner==1){
+                    document.getElementById(`${r}, ${c}`).classList.add('cpuWinner')
+                    document.getElementById(`${r+1}, ${c}`).classList.add('cpuWinner')
+                    document.getElementById(`${r+2}, ${c}`).classList.add('cpuWinner')
+                    document.getElementById(`${r+3}, ${c}`).classList.add('cpuWinner')
+                }else if(winner == -1){
+                    document.getElementById(`${r}, ${c}`).classList.add('playerWinner')
+                    document.getElementById(`${r+1}, ${c}`).classList.add('playerWinner')
+                    document.getElementById(`${r+2}, ${c}`).classList.add('playerWinner')
+                    document.getElementById(`${r+3}, ${c}`).classList.add('playerWinner')
+                }
+            }
+        }
+    }
+    // d
+    for (let r=0;r<3;r++){
+        for (let c = 0;c<4;c++){
+            if ((board[r][c] != 0) &(board[r][c] == board[r+1][c+1]) & (board[r][c] == board[r+2][c+2]) &(board[r][c] == board[r+3][c+3])){
+                winner = board[r][c]
+                if(winner==1){
+                    document.getElementById(`${r}, ${c}`).classList.add('cpuWinner')
+                    document.getElementById(`${r+1}, ${c+1}`).classList.add('cpuWinner')
+                    document.getElementById(`${r+2}, ${c+2}`).classList.add('cpuWinner')
+                    document.getElementById(`${r+3}, ${c+3}`).classList.add('cpuWinner')
+                }else if(winner == -1){
+                    document.getElementById(`${r}, ${c}`).classList.add('playerWinner')
+                    document.getElementById(`${r+1}, ${c+1}`).classList.add('playerWinner')
+                    document.getElementById(`${r+2}, ${c+2}`).classList.add('playerWinner')
+                    document.getElementById(`${r+3}, ${c+3}`).classList.add('playerWinner')
+                }
+            }
+        }
+    }
+    for (let r=0;r<3;r++){
+        for (let c = 0;c<4;c++){
+            if ((board[5-r][c] != 0) &(board[5-r][c] == board[4-r][c+1]) & (board[5-r][c] == board[3-r][c+2]) &(board[5-r][c] == board[2-r][c+3])){
+                winner = board[5-r][c]
+                if(winner==1){
+                    document.getElementById(`${5-r}, ${c}`).classList.add('cpuWinner')
+                    document.getElementById(`${4-r}, ${c+1}`).classList.add('cpuWinner')
+                    document.getElementById(`${3-r}, ${c+2}`).classList.add('cpuWinner')
+                    document.getElementById(`${2-r}, ${c+3}`).classList.add('cpuWinner')
+                }else if(winner == -1){
+                    document.getElementById(`${5-r}, ${c}`).classList.add('playerWinner')
+                    document.getElementById(`${4-r}, ${c+1}`).classList.add('playerWinner')
+                    document.getElementById(`${3-r}, ${c+2}`).classList.add('playerWinner')
+                    document.getElementById(`${2-r}, ${c+3}`).classList.add('playerWinner')
+                }
+            }
+        }
+    }
+    return(winner)
+}
 // bms-best move score: number of possible connect 4s for each tile
 function find_score(board,turn){
     bms = [[3, 4, 5, 7, 5, 4, 3],
@@ -169,6 +248,18 @@ function find_score(board,turn){
     for(i = 0;i<6;i++){
         for(j = 0;j<7;j++){
             score+=bms[i][j]*board[i][j]
+        }
+    }
+    let counts = []
+    let count = 0
+    for(let i = 0; i<6;i++){
+        for(let j=0;j<=7;j++){
+            if(board[i,j]!=turn){
+                counts.push(count)
+                count = 0
+            }else{
+                count +=1
+            }
         }
     }
     moves = check_legal_moves(board)
@@ -269,9 +360,6 @@ function playerMove(move){
                     // change class to color the tile with id "r, c"
                     document.getElementById(`${r}, ${c}`).classList.remove('playerHover')
                     document.getElementById(`${r}, ${c}`).classList.add('player')
-                    if (check_for_winner(board) == -1){
-                        document.getElementById('winner').textContent = "You Win"
-                    }
                 }
             })
         }else{
@@ -288,6 +376,7 @@ function cpuMove(board,cpuRating){
         score = parseFloat(document.getElementById('playerScore').innerHTML)
         document.getElementById('playerScore').innerHTML = score + 1
         document.getElementById('winner').textContent = "Player Wins"
+        color_winner(board)
         return
     }else if(winner == 0){
         // can change depth here   !
@@ -312,6 +401,7 @@ function cpuMove(board,cpuRating){
                 console.log('Winner!!')
                 console.log(winner)
                 document.getElementById('winner').textContent = "CPU Wins"
+                color_winner(board)
             }else if(check_legal_moves(board).length == 0){
                 console.log('draw')
                 document.getElementById('winner').textContent = "Draw"
