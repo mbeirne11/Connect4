@@ -33,6 +33,7 @@ function setBoard() {
                 tile.classList.add('tile')
                 tile.setAttribute("onclick", "playerMove(this)");
                 tile.setAttribute("onmousemove", "highlightMove(this)");
+                tile.setAttribute("onmousedown", "highlightMove(this)");
                 tile.setAttribute("onmouseout", "unHighlightMove(this)");
                 document.getElementById('board').append(tile)
             }
