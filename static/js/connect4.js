@@ -275,7 +275,7 @@ function find_score(board,turn){
 function minmax(board,depth,turn,alpha,beta){
     // #if someone wins, score = + or - 1000
     if (check_for_winner(board) != 0){
-        return(Infinity*(-turn))
+        return(1000*(-turn)*(depth+1)
     }
     // #check bms to approximate best move
     if (depth == 0){
