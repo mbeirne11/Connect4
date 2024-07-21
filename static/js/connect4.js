@@ -3,22 +3,17 @@ window.onload = function() {
 }
 // 6x7 board
 let board = [[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]
-// let cpuRating = 1
 function setBoard() {
     // assign button to a variable using D3 and button's id 
     cpuRating = d3.select("#cpuRating").property('value')
-    console.log(cpuRating)
+    turn = d3.select("#homeOrAway").property('value')
+
+    console.log(`depth: ${cpuRating}`)
     let b = d3.select('#newGame')
-    let c = d3.select('#newGame2')
     b.on("click", () => {
         setBoard()
         // Player first
-        newGame(board)
-    })
-    c.on("click", () => {
-        setBoard()
-        // CUP first
-        newGame2(board,cpuRating)
+        newGame(board,cpuRating,turn)
     })
     // reset header
     document.getElementById('winner').textContent = ""
@@ -48,7 +43,7 @@ function setBoard() {
         }
     }
     // player first
-    newGame(board)
+    // newGame(board,cpuRating,turn)
 }
 // mouseout event
 function unHighlightMove(tile){
@@ -73,23 +68,27 @@ function highlightMove(tile){
     })
 }
 // Player first
-function newGame(board) {
-    for(let i=0;i<6;i++){
-        for(let j=0;j<7;j++){
-            board[i][j] = 0
-        }
-    }
-    console.log('new game')}
-// CPU first
-function newGame2(board) {
+function newGame(board,cpuRating,turn) {
     for(let i=0;i<6;i++){
         for(let j=0;j<7;j++){
             board[i][j] = 0
         }
     }
     console.log('new game')
-    cpuMove(board,cpuRating)
+    if(turn == "1"){
+        cpuMove(board,cpuRating)
+    }
 }
+// // CPU first
+// function newGame2(board) {
+//     for(let i=0;i<6;i++){
+//         for(let j=0;j<7;j++){
+//             board[i][j] = 0
+//         }
+//     }
+//     console.log('new game')
+//     cpuMove(board,cpuRating)
+// }
 function check_legal_moves(board){
     if(check_for_winner(board) != 0){
         return([])
@@ -275,7 +274,7 @@ function find_score(board,turn){
 function minmax(board,depth,turn,alpha,beta){
     // #if someone wins, score = + or - 1000
     if (check_for_winner(board) != 0){
-        return(Infinity*(-turn))
+        return(1000*(-turn)*(depth+1))
     }
     // #check bms to approximate best move
     if (depth == 0){
@@ -342,7 +341,7 @@ function playerMove(move){
     // if there is a winner on the previous move, reset the board
     let winner = document.getElementById('winner').textContent
     if(winner != ''){
-        setBoard()
+        return
     }else{ 
         // get column for player move and check legal moves to get the row
         console.log('PlayerMove')
@@ -361,11 +360,13 @@ function playerMove(move){
                     // change class to color the tile with id "r, c"
                     document.getElementById(`${r}, ${c}`).classList.remove('playerHover')
                     document.getElementById(`${r}, ${c}`).classList.add('player')
+                    
                 }
             })
         }else{
             return
         }
+        
         cpuMove(board,cpuRating)
     } 
 }
@@ -380,8 +381,26 @@ function cpuMove(board,cpuRating){
         color_winner(board)
         return
     }else if(winner == 0){
-        // can change depth here   !
         let move = best_move(board,cpuRating)
+        let smoves = []
+        for(let i=0;i<check_legal_moves(board).length;i++){
+            r=check_legal_moves(board)[i][0]
+            c=check_legal_moves(board)[i][1]
+            board[r][c]=-1
+            if(check_for_winner(board)==-1){
+                move = [r,c]
+                console.log(move)
+            }
+            board[r][c]=0
+        }
+        if(cpuRating==1){
+            smoves.push(move)
+            move = check_legal_moves(board)[~~(Math.random() * check_legal_moves(board).length)]
+            smoves.push(move)
+            move = smoves[~~(Math.random() * smoves.length)]
+        }
+
+        
         if(!move){
             console.log('draw')
             document.getElementById('winner').textContent = "Draw"
@@ -395,6 +414,7 @@ function cpuMove(board,cpuRating){
             let c = move[1]
             board[r][c] = 1
             document.getElementById(`${r}, ${c}`).classList.add('cpu')
+            
             let winner = check_for_winner(board)
             if(winner == 1){
                 score = parseFloat(document.getElementById('cpuScore').innerHTML)

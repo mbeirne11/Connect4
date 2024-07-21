@@ -7,36 +7,43 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <!-- D3 -->    
         <script src="https://d3js.org/d3.v5.min.js"></script>
-        <script type="text/javascript" src="https://cdn.rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js" />
-        </script>
+        <script type="text/javascript" src="https://cdn.rawgit.com/jasondavies/d3-cloud/master/build/d3.layout.cloud.js"></script>
         <!-- static -->
         <link rel="stylesheet" type="text/css" href="static/css/style.css">
         <script src="static\js\connect4.js"></script>
     </head>
     <body>
         <h1>CONNECT 4</h1>
-        <select id="cpuRating">
-            <option value = "1">Easy</option>
-            <option value = "2">Medium</option>
-            <option value = "5">Hard</option>
-            <option value = "7">Very Hard</option>
-        </select>
-        <button type="button" id="newGame">
-            New Game<br>Player first
-        </button>
-        <button type="button" id="newGame2">
-            New Game<br>CPU first
-        </button>
+        <div class="container">
+            <div>   
+                <select id="cpuRating">
+                    <option value = "1">Easy</option>
+                    <option value = "2">Medium</option>
+                    <option value = "5">Hard</option>
+                    <!-- <option value = "7">Very Hard</option> -->
+                </select>
+                <select id="homeOrAway">
+                    <option value = "-1">Player First</option>
+                    <option value = "1">CPU First</option>
+                </select> 
+            </div>
+            <div>   
+                <button type="button" id="newGame">New Game</button>
+            </div>
+        </div>
         <hr>
-        <div id="board"></div>
-        <h1 id="winner"></h1>
-        <hr>
-        <h1>Score</h1>
-        <h2 style="display:inline-block;">CPU: </h2>
-        <h2 id = "cpuScore" style="display:inline-block;">0</h2>
-        <h2 style="display:inline-block;"> | </h2>
-        <h2 style="display:inline-block;">Player: </h2>
-        <h2 id = "playerScore" style="display:inline-block;">0</h2>
+        <div>
+            <div id="board"></div>
+            <h2 id="winner"></h2>
+            <hr>
+            <h2>Score</h2>
+            <h2 style="display:inline-block;">CPU: </h2>
+            <h2 id = "cpuScore" style="display:inline-block;">0</h2>
+            <h2 style="display:inline-block;"> | </h2>
+            <h2 style="display:inline-block;">Player: </h2>
+            <h2 id = "playerScore" style="display:inline-block;">0</h2>
+        </div>
+
 
     </body>
 </html>
