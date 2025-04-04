@@ -4,6 +4,7 @@ window.onload = function() {
 // 6x7 board
 let board = [[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]]
 //Create an empty board
+let turn;
 function setBoard() {
     // assign  the value of each selector to a variable using d3 and their id 
     cpuRating = d3.select("#cpuRating").property('value')
@@ -81,7 +82,9 @@ function newGame(board,cpuRating,turn) {
     console.log('new game')
     //if cpu's turn, call cpuMove
     if(turn == "1"){
-        cpuMove(board,cpuRating)
+        setTimeout(function(){
+            cpuMove(board,cpuRating)
+        },500)
     }
 }
 //Check legal moves based on current board 
@@ -373,6 +376,9 @@ function best_move(board,depth){
 }
 //tile on click attribute
 function playerMove(move){
+    if(turn == 1){
+        return
+    }
     //check to see if the game is over
     let winner = document.getElementById('winner').textContent
     if(winner != ''){//if the game is over
@@ -394,21 +400,34 @@ function playerMove(move){
                     let r = move[0]
                     board[r][c]=-1
                     // change class to color the tile with id "r, c"
-                    document.getElementById(`${r}, ${c}`).classList.remove('playerHover')
+                    document.getElementById(`col${c+1}`).classList.remove('playerHover')
                     document.getElementById(`${r}, ${c}`).classList.add('player')
-                    
                 }
             })
         }else{
             return
         }
-        
-        cpuMove(board,cpuRating)
+        turn = 1
+        let winner = check_for_winner(board)
+        if (winner == -1){
+            score = parseFloat(document.getElementById('playerScore').innerHTML)
+            document.getElementById('playerScore').innerHTML = score + 1
+            document.getElementById('winner').textContent = "Player Wins!!"
+            color_winner(board)
+            return
+        }
+        setTimeout(function(){
+            cpuMove(board,cpuRating)
+        },1000)
     } 
 }
 //after playerMove or if CPU first
 //find the best move for the CPU
 function cpuMove(board,cpuRating){
+    if(turn == 0){
+        return
+    }
+    turn = 0
     console.log(cpuRating)
     console.log('cpuMove')
     let winner = check_for_winner(board)

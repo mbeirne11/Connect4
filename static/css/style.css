@@ -34,11 +34,21 @@ h2{
     display: flex;
     flex-wrap: wrap
 }
+.gameView{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+.gameInfo{
+    padding-top: 50%;
+    font-size: 2vmin;
+}
 #board{
     width: 70%;
     height:0;
     padding-bottom: min(600px,60%);
 
+    /* min-width: 200px; */
+    /* min-height: 50px; */
     max-width: 700px;
     max-height: 600px;
 
@@ -107,7 +117,7 @@ select{
 }
 .player{
     background-image: radial-gradient(rgb(255, 105, 105), rgb(255, 64, 64), rgb(255, 0, 0));
-
+    
 }
 .playerHover{
     background-image: radial-gradient(rgb(255, 105, 105), rgb(255, 64, 64), rgb(255, 0, 0));
